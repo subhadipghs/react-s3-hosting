@@ -1,6 +1,6 @@
 import { useTodo } from "./hooks/useTodo";
-import "./App.css";
 import { useState } from "react";
+import "./App.css";
 
 function AddTodoForm() {
   const [todoText, setTodoText] = useState<string>("");
@@ -22,12 +22,27 @@ function AddTodoForm() {
   );
 }
 
+interface TodoItemProps {
+  id: string;
+  text: string;
+}
+
+function TodoItem({ id, text }: TodoItemProps) {
+  const { deleteTodo } = useTodo();
+  return (
+    <div className="todo-item">
+      <div className="todo-text">{text}</div>
+      <button onClick={() => deleteTodo(id)}>x</button>
+    </div>
+  );
+}
+
 function TodoList() {
   const { getTodos } = useTodo();
   return (
     <>
       {getTodos().map((todo) => (
-        <div key={todo.id}>{todo.text}</div>
+        <TodoItem key={todo.id} id={todo.id} text={todo.text}></TodoItem>
       ))}
     </>
   );

@@ -1,4 +1,5 @@
 import { ReactNode, createContext, useState } from "react";
+import { nanoid } from "nanoid";
 
 interface ITodo {
   id: string;
@@ -11,7 +12,6 @@ interface ITodoContext {
   todos: TodoState;
   addTodo: (text: string) => void;
   getTodos: () => ITodo[] | [];
-  updateTodo: (id: string, text: string) => void;
   deleteTodo: (id: string) => void;
 }
 interface TodoProviderProps {
@@ -28,16 +28,18 @@ function TodoProvider(props: TodoProviderProps) {
       return [
         ...prev,
         {
-          id: `${todos.length}`,
+          id: nanoid(),
           text,
         },
       ];
     });
   };
 
-  const updateTodo = (id: string, text: string) => {};
-
-  const deleteTodo = (id: string) => {};
+  const deleteTodo = (id: string) => {
+    setTodos((prev: TodoState) => {
+      return prev.filter((todo) => todo.id !== id);
+    });
+  };
 
   const getTodos = (): ITodo[] | [] => {
     return todos;
@@ -48,7 +50,6 @@ function TodoProvider(props: TodoProviderProps) {
       value={{
         todos,
         addTodo,
-        updateTodo,
         deleteTodo,
         getTodos,
       }}
