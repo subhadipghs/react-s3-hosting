@@ -1,24 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useTodo } from "./hooks/useTodo";
+import "./App.css";
+import { useState } from "react";
+
+function AddTodoForm() {
+  const [todoText, setTodoText] = useState<string>("");
+  const { addTodo } = useTodo();
+  const handleAddTodo = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    addTodo(todoText);
+  };
+  return (
+    <form onSubmit={handleAddTodo}>
+      <input
+        onChange={(e) => setTodoText(e.target.value)}
+        placeholder="Enter a todo..."
+        name="todo"
+        id="todo"
+      />
+      <button type="submit">Add Me</button>
+    </form>
+  );
+}
+
+function TodoList() {
+  const { getTodos } = useTodo();
+  return (
+    <>
+      {getTodos().map((todo) => (
+        <div key={todo.id}>{todo.text}</div>
+      ))}
+    </>
+  );
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AddTodoForm />
+      <TodoList />
     </div>
   );
 }
